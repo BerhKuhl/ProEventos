@@ -487,3 +487,7 @@ FrontEnd/ProEventos-App/typings
 FrontEnd/ProEventos-App/.DS_Store
 FrontEnd/ProEventos-App/Thumbs.db
 
+*.db
+*.db-shm
+*.db-wal
+
