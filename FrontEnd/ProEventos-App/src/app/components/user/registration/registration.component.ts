@@ -35,7 +35,8 @@ export class RegistrationComponent implements OnInit {
     }, formOptions);
   }
 
-  protected resetForm(): void {
+  protected resetForm(event: any): void {
+    event.preventDefault();
     this.form.reset();
   }
 

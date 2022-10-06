@@ -36,7 +36,8 @@ export class PerfilComponent implements OnInit {
     }, formOptions);
   }
 
-  resetForm(): void {
+  resetForm(event: any): void {
+    event.preventDefault();
     this.form.reset();
   }
 

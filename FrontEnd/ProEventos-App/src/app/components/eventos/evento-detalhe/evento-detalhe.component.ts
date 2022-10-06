@@ -30,7 +30,8 @@ export class EventoDetalheComponent implements OnInit {
     });
   }
 
-  protected resetForm(): void {
+  protected resetForm(event: any): void {
+    event.preventDefault();
     this.form.reset();
   }
 
