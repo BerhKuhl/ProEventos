@@ -24,11 +24,14 @@ namespace ProEventos.Application
         {
             try
             {
-                // _geralPersist.Add<Evento>(model);
-                // if (await _geralPersist.SaveChangesAsync())
-                // {
-                //     return await _eventoPersist.GetByIdAsync(model.Id, false);
-                // }
+                var evento = _mapper.Map<Evento>(model);
+
+                _geralPersist.Add<Evento>(evento);
+                if (await _geralPersist.SaveChangesAsync())
+                {
+                    var result = await _eventoPersist.GetByIdAsync(evento.Id, false);
+                    return _mapper.Map<EventoDto>(result);
+                }
                 return null;
             }
             catch (Exception ex)
@@ -46,10 +49,14 @@ namespace ProEventos.Application
 
                 model.Id = evento.Id;
 
-                _geralPersist.Update(model);
+                _mapper.Map(model, evento);
+
+                _geralPersist.Update<Evento>(evento);
+
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    //return await _eventoPersist.GetByIdAsync(model.Id, false);
+                    var result = await _eventoPersist.GetByIdAsync(evento.Id, false);
+                    return _mapper.Map<EventoDto>(result);
                 }
                 return null;
             }

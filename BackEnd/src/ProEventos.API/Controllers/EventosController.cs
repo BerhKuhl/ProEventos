@@ -28,21 +28,21 @@ namespace ProEventos.API.Controllers
             try
             {
                 var events = await _eventoService.GetAllAsync();
-                if (events == null) return NotFound("Nenhum evento encontrado.");
+                if (events == null) return NoContent();
 
                 var returnEvent = new List<EventoDto>();
 
-                foreach (var @event in events)
+                foreach (var eventClass in events)
                 {
                     returnEvent.Add(new EventoDto() {
-                        Id = @event.Id,
-                        Local = @event.Local,
-                        DataEvento = @event.DataEvento.ToString(),
-                        Tema = @event.Tema,
-                        QtdPessoas = @event.QtdPessoas,
-                        ImagemURL = @event.ImagemURL,
-                        Telefone = @event.Telefone,
-                        Email = @event.Email
+                        Id = eventClass.Id,
+                        Local = eventClass.Local,
+                        DataEvento = eventClass.DataEvento.ToString(),
+                        Tema = eventClass.Tema,
+                        QtdPessoas = eventClass.QtdPessoas,
+                        ImagemURL = eventClass.ImagemURL,
+                        Telefone = eventClass.Telefone,
+                        Email = eventClass.Email
                     });
                 }
 
@@ -60,7 +60,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 var evento = await _eventoService.GetByIdAsync(id, true);
-                if (evento == null) return NotFound("Evento por Id não foi encontrado.");
+                if (evento == null) return NoContent();
 
                 return Ok(evento);
             }
@@ -76,7 +76,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 var evento = await _eventoService.GetAllByTemaAsync(tema, true);
-                if (evento == null) return NotFound("Não foi encontrado nenhum Evento com o tema especificado.");
+                if (evento == null) return NoContent();
 
                 return Ok(evento);
             }
@@ -108,7 +108,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 var evento = await _eventoService.Update(id, model);
-                if (evento == null) return BadRequest("Erro ao tentar adicionar o evento!");
+                if (evento == null) return NoContent();
 
                 return Ok(evento);
             }
@@ -123,7 +123,10 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                return await _eventoService.Delete(id) ? Ok("Deletado!") : BadRequest("Erro ao tentar deletar o evento!");
+                var evento = await _eventoService.GetByIdAsync(id, true);
+                if (evento == null) return NoContent();
+
+                return await _eventoService.Delete(id) ? Ok("Deletado!") : throw new Exception("Ocorreu um problema inesperado!");
             }
             catch (Exception ex)
             {
