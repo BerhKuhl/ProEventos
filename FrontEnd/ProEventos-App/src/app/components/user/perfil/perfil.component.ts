@@ -9,11 +9,9 @@ import { ValidatorField } from '@app/helpers/ValidatorField';
 })
 export class PerfilComponent implements OnInit {
 
-  form!: FormGroup;
+  form: FormGroup;
 
-  get f(): any {
-    return this.form.controls;
-  }
+  get f(): any { return this.form.controls; }
 
   constructor(private fb: FormBuilder) { }
 
@@ -26,14 +24,20 @@ export class PerfilComponent implements OnInit {
     };
 
     this.form = this.fb.group({
-      //title: ['', Validators.required],
+      title: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       telephone: ['', Validators.required],
       function: ['', Validators.required],
-      description: ['', Validators.required]
+      description: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
     }, formOptions);
+  }
+
+  resetForm(): void {
+    this.form.reset();
   }
 
 }
