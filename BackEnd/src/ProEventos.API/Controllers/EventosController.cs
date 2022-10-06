@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.Application.Dtos;
 using ProEventos.Application.Contracts;
-using ProEventos.Domain;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Contexts;
 
@@ -27,10 +27,26 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var eventos = await _eventoService.GetAllAsync();
-                if (eventos == null) return NotFound("Nenhum evento encontrado.");
+                var events = await _eventoService.GetAllAsync();
+                if (events == null) return NotFound("Nenhum evento encontrado.");
 
-                return Ok(eventos);
+                var returnEvent = new List<EventoDto>();
+
+                foreach (var @event in events)
+                {
+                    returnEvent.Add(new EventoDto() {
+                        Id = @event.Id,
+                        Local = @event.Local,
+                        DataEvento = @event.DataEvento.ToString(),
+                        Tema = @event.Tema,
+                        QtdPessoas = @event.QtdPessoas,
+                        ImagemURL = @event.ImagemURL,
+                        Telefone = @event.Telefone,
+                        Email = @event.Email
+                    });
+                }
+
+                return Ok(returnEvent);
             }
             catch (Exception ex)
             {
@@ -71,7 +87,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento model)
+        public async Task<IActionResult> Post(EventoDto model)
         {
             try
             {
@@ -87,7 +103,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Evento model)
+        public async Task<IActionResult> Put(int id, EventoDto model)
         {
             try
             {
