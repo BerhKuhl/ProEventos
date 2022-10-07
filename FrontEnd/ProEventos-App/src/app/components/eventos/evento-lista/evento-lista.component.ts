@@ -83,16 +83,13 @@ export class EventoListaComponent implements OnInit {
       (result: any) => {
         console.log(result)
         this.toastr.success('O Evento foi deletado com sucesso.', 'Evento Deletado!');
-        this.spinner.hide();
         this.getEvents()
       },
       (error) => {
         this.toastr.error(`Erro ao tentar deletar o evento de código ${this.eventId}!`, 'Erro');
-        this.spinner.hide();
         console.error(error)
-      },
-      () => this.spinner.hide()
-    )
+      }
+    ).add(() => this.spinner.hide());
 
   }
 
