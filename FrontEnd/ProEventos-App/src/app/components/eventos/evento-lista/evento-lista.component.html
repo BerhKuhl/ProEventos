@@ -3,7 +3,13 @@
     <div class="flex-fill">
       <div class="input-group mb-2">
         <span class="input-group-text" id="basic-addon1">Filtro:</span>
-        <input type="text" class="form-control me-2" placeholder="Filtrar por Tema e Local" aria-describedby="basic-addon1" [(ngModel)]="filterList">
+        <input
+          type="text"
+          class="form-control me-2"
+          placeholder="Filtrar por Tema e Local"
+          aria-describedby="basic-addon1"
+          [(ngModel)]="filterList"
+        />
       </div>
     </div>
     <div>
@@ -18,8 +24,8 @@
       <tr>
         <th class="d-none d-md-table-cell">
           <button class="btn btn-outline-light btn-sm" (click)="ShowImg()">
-            <i class="{{!showImg ? 'fa fa-eye' : 'fa fa-eye-slash'}}"></i>
-            {{!showImg ? 'Exibir' : 'Ocultar'}}
+            <i class="{{ !showImg ? 'fa fa-eye' : 'fa fa-eye-slash' }}"></i>
+            {{ !showImg ? "Exibir" : "Ocultar" }}
           </button>
         </th>
         <th>#</th>
@@ -32,18 +38,35 @@
       </tr>
     </thead>
     <tbody *ngIf="eventos && eventos.length">
-      <tr *ngFor="let evento of eventosFiltered" (click)="eventDetail(evento.id)" style="cursor: pointer;">
+      <tr
+        *ngFor="let evento of eventosFiltered"
+        (click)="eventDetail(evento.id)"
+        style="cursor: pointer"
+      >
         <td class="d-none d-md-table-cell">
-          <img src="/assets/{{evento.imagemURL}}" alt="" [collapse]="!showImg" [isAnimated]="true" [style.width.px]="widthImg" [style.margin.px]="marginImg">
+          <img
+            src="/assets/{{ evento.imagemURL }}"
+            alt=""
+            [collapse]="!showImg"
+            [isAnimated]="true"
+            [style.width.px]="widthImg"
+            [style.margin.px]="marginImg"
+          />
         </td>
-        <td>{{evento.id}}</td>
-        <td>{{evento.tema}}</td>
-        <td class="d-none d-md-table-cell">{{evento.local}}</td>
-        <td>{{evento.dataEvento | DateFormatPipe}}</td>
-        <td class="d-none d-md-table-cell">{{evento.qtdPessoas}}</td>
-        <td class="d-none d-md-table-cell">{{evento.lotes[0].nome | uppercase}}</td>
-        <td class="mx-auto">
-          <button type="button" class="btn btn-danger btn-lg" (click)="openModal(template)" tooltip="Excluir">
+        <td>{{ evento.id }}</td>
+        <td>{{ evento.tema }}</td>
+        <td class="d-none d-md-table-cell">{{ evento.local }}</td>
+        <td>{{ evento.dataEvento | DateFormatPipe }}</td>
+        <td class="d-none d-md-table-cell">{{ evento.qtdPessoas }}</td>
+        <td class="d-none d-md-table-cell">
+          {{ evento.lotes[0]?.nome | uppercase }}
+        </td>
+        <td class="d-none d-md-table-cell">
+          <button
+            type="button"
+            class="btn btn-danger btn-lg"
+            (click)="openModal($event, template, evento.id)"
+          >
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -61,8 +84,14 @@
 
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Tem certeza que quer deletar este Evento?</p>
-    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
-    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+    <p>
+      Tem certeza que quer deletar este Evento de Código {{ this.eventId }}?
+    </p>
+    <button type="button" class="btn btn-default" (click)="confirm()">
+      Sim
+    </button>
+    <button type="button" class="btn btn-primary" (click)="decline()">
+      Não
+    </button>
   </div>
 </ng-template>

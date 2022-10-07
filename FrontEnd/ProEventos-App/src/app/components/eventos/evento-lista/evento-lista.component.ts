@@ -16,6 +16,7 @@ export class EventoListaComponent implements OnInit {
   modalRef?: BsModalRef;
   public eventos: Evento[] = [];
   public eventosFiltered: Evento[] = [];
+  public eventId = 0;
   public widthImg = 150;
   public marginImg = 2;
   public showImg = true;
@@ -37,7 +38,7 @@ export class EventoListaComponent implements OnInit {
   }
 
   public constructor(
-    private eventoService: EventoService,
+    private eventService: EventoService,
     private modalService: BsModalService,
     private toastr : ToastrService,
     private spinner: NgxSpinnerService,
@@ -45,7 +46,7 @@ export class EventoListaComponent implements OnInit {
     ) { }
 
   public ngOnInit(): void {
-    this.getEventos();
+    this.getEvents();
 
     this.spinner.show();
   }
@@ -54,28 +55,45 @@ export class EventoListaComponent implements OnInit {
     this.showImg = !this.showImg;
   }
 
-  public getEventos(): void {
-    const observer = {
-      next: (eventosResp: Evento[]) => {
+  public getEvents(): void {
+    this.eventService.getEvents().subscribe(
+      (eventosResp: Evento[]) => {
         this.eventos = eventosResp;
         this.eventosFiltered = this.eventos;
       },
-      error: (error : any) => {
+      (error : any) => {
         this.spinner.hide();
         this.toastr.error('Erro ao carregar os eventos.', 'Erro!')
       },
-      complete: () => this.spinner.hide()
-    }
-    this.eventoService.getEventos().subscribe(observer);
+      () => this.spinner.hide()
+    );
   }
 
-  openModal(template: TemplateRef<any>) : void {
+  openModal(event: any, template: TemplateRef<any>, eventId: number) : void {
+    event.stopPropagation();
+    this.eventId = eventId;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('O Evento foi deletado com sucesso.', 'Evento Deletado!')
+    this.spinner.show();
+
+    this.eventService.deleteEvent(this.eventId).subscribe (
+      (result: any) => {
+        console.log(result)
+        this.toastr.success('O Evento foi deletado com sucesso.', 'Evento Deletado!');
+        this.spinner.hide();
+        this.getEvents()
+      },
+      (error) => {
+        this.toastr.error(`Erro ao tentar deletar o evento de código ${this.eventId}!`, 'Erro');
+        this.spinner.hide();
+        console.error(error)
+      },
+      () => this.spinner.hide()
+    )
+
   }
 
   decline(): void {
